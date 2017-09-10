@@ -17,7 +17,8 @@ namespace Acme.Biz.Tests
             //Arrange
             var currentProduct = new Product(1, "Saw", "15 inch steel blade hand saw");
             currentProduct.ProductVendor.CompanyName = "ABC Corp";
-            var expected = "Hello Saw (1): 15 inch steel blade hand saw";
+            var expected = "Hello Saw (1): 15 inch steel blade hand saw" +
+                " Available on: ";
 
             //Act
             var actual = currentProduct.SayHello();
@@ -37,6 +38,154 @@ namespace Acme.Biz.Tests
 
             //Act
             var actual = companyName;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void ConvertMetersToInches()
+        {
+            //Arrange
+            var expected = 78.74;
+
+            //Act
+            var actual = 2 * Product.InchesPerMeter;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void MinimumPriceTest_Default()
+        {
+            //Arrange
+            var currentProduct = new Product();
+            var expected = .96m;
+
+            //Act
+            var actual = currentProduct.MinimumPrice;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void MinimumPriceTest_Bulk()
+        {
+            //Arrange
+            var currentProduct = new Product(1, "Bulk Tools", "");
+            var expected = 9.99m;
+
+            //Act
+            var actual = currentProduct.MinimumPrice;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void ProductName_Format()
+        {
+            //Arrange
+            var currentProduct = new Product(1, "   Bulk Tools   ", "");
+            var expected = "Bulk Tools";
+
+            //Act
+            var actual = currentProduct.ProductName;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void ProductName_TooShort()
+        {
+            //Arrange
+            var currentProduct = new Product(1, "aw", "");
+            string expected = null;
+            string expectedMessage = "Product Name must be at least 3 characters";
+
+            //Act
+            var actual = currentProduct.ProductName;
+            var actualMessage = currentProduct.ValidationMessage;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expectedMessage, actualMessage);
+        }
+
+        [TestMethod()]
+        public void ProductName_TooLong()
+        {
+            //Arrange
+            var currentProduct = new Product(1, "Steel Bladed Hand Saw", "");
+            string expected = null;
+            string expectedMessage = "Product Name cannot be more than 20 characters";
+
+            //Act
+            var actual = currentProduct.ProductName;
+            var actualMessage = currentProduct.ValidationMessage;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expectedMessage, actualMessage);
+        }
+
+        [TestMethod()]
+        public void Category_DefaultValue()
+        {
+            //Arrange
+            var currentProduct = new Product();
+            string expected = "Tools";
+
+            //Act
+            var actual = currentProduct.Category;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void Sequence_DefaultValue()
+        {
+            //Arrange
+            var currentProduct = new Product();
+            var expected = 1;
+
+            //Act
+            var actual = currentProduct.SequenceNumber;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void Sequence_NewValue()
+        {
+            //Arrange
+            var currentProduct = new Product();
+            currentProduct.SequenceNumber = 5;
+
+            var expected = 5;
+
+            //Act
+            var actual = currentProduct.SequenceNumber;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void ProductCode_DefaultValue()
+        {
+            //Arrange
+            var currentProduct = new Product();
+
+            var expected = "Tools-1";
+
+            //Act
+            var actual = currentProduct.ProductCode;
 
             //Assert
             Assert.AreEqual(expected, actual);
